@@ -20,7 +20,7 @@ function App() {
       completed: false,
     },
     { id: nanoid(), name: "Banana", quantity: "1 dúzia", completed: false },
-    { id: nanoid(), name: "Laranja", quantity: "1 dúzia", completed: false },
+    { id: nanoid(), name: "Laranja", quantity: "1 dúzia", completed: true },
   ]);
 
   const inputRef = useRef<HTMLInputElement>(null);
