@@ -62,6 +62,22 @@ function App() {
     inputRef.current && inputRef.current.focus();
   }
 
+  function handleClickComplete(id: string) {
+    /* 
+      1. Pegar o ID
+      2. Pegar o item correspondente e marcar o completed como o oposto      
+      3. Atribuir o novo estado
+    */
+
+    const newItems = items.map((item) => {
+      if (item.id === id) {
+        item.completed = !item.completed;
+      }
+      return item;
+    });
+    setItems(newItems);
+  }
+
   return (
     <main className="max-w-2xl px-6 py-12 pb-20 mx-auto my-10 bg-white md:my-20 md:px-32 md:rounded-3xl">
       <header className="text-center">
@@ -104,7 +120,7 @@ function App() {
       </form>
       <section className="mt-10 space-y-3 ">
         {notCompletedItems.map((item) => (
-          <Item key={item.id} item={item} />
+          <Item key={item.id} item={item} handleClick={handleClickComplete} />
         ))}
       </section>
       <section className="mt-16 space-y-3">
@@ -112,7 +128,7 @@ function App() {
           Itens já comprados
         </h2>
         {completedItems.map((item) => (
-          <Item key={item.id} item={item} />
+          <Item key={item.id} item={item} handleClick={handleClickComplete} />
         ))}
       </section>
     </main>

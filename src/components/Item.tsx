@@ -5,13 +5,16 @@ import type { Item } from "../App.tsx";
 
 type ItemProps = {
   item: Item;
+  handleClick: (id: string) => void;
 };
 
-export function Item({ item }: ItemProps) {
+export function Item({ item, handleClick }: ItemProps) {
   return (
     <>
       <article className="flex w-full gap-4">
-        <img src={item.completed ? done : todo} alt="#" />
+        <button onClick={() => handleClick(item.id)}>
+          <img src={item.completed ? done : todo} alt="#" />
+        </button>
         <div className="flex-1">
           <p
             className={`${item.completed ? "text-slate-400 line-through" : ""}`}
