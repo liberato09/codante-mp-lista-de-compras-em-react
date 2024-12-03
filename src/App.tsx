@@ -1,9 +1,67 @@
-import logo from './assets/logo.svg';
-import trash from './assets/trash.svg';
-import todo from './assets/todo.svg';
-import done from './assets/done.svg';
+import logo from "./assets/logo.svg";
+import { useRef, useState } from "react";
+import { Item } from "./components/Item";
+
+import { nanoid } from "nanoid";
+
+export type Item = {
+  id: string;
+  name: string;
+  quantity: string;
+  completed: boolean;
+};
 
 function App() {
+  const [items, setItems] = useState<Item[]>([
+    {
+      id: nanoid(),
+      name: "Leite em Pó",
+      quantity: "3 caixas",
+      completed: false,
+    },
+    { id: nanoid(), name: "Banana", quantity: "1 dúzia", completed: false },
+    { id: nanoid(), name: "Laranja", quantity: "1 dúzia", completed: false },
+  ]);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const completedItems = items.filter((item) => item.completed);
+  const notCompletedItems = items.filter((item) => !item.completed);
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    /* 
+      1. Obter os dados (nome e quantidade que vem do formulário)
+      2. Construir um objeto Item
+      3. Inserir no estado
+      4. Resetar o formulário (apagar os campos do formulário)
+      5. Dar foco no primeiro input
+     */
+
+    // 1. Obter os dados (nome e quantidade que vem do formulário)
+    const formElemento = event.currentTarget;
+    const formData = new FormData(formElemento);
+    const name = formData.get("nome") as string;
+    const quantity = formData.get("quantidade") as string;
+
+    // 2. Construir um objeto Item
+    const item: Item = {
+      id: nanoid(),
+      name,
+      quantity,
+      completed: false,
+    };
+
+    // 3. Inserir no estado
+    setItems([item, ...items]);
+
+    // 4. Resetar o formulário (apagar os campos do formulário)
+    formElemento.reset();
+
+    // 5. Dar foco no primeiro input
+    inputRef.current && inputRef.current.focus();
+  }
+
   return (
     <main className="max-w-2xl px-6 py-12 pb-20 mx-auto my-10 bg-white md:my-20 md:px-32 md:rounded-3xl">
       <header className="text-center">
@@ -16,14 +74,16 @@ function App() {
         </p>
         <hr className="w-1/3 mx-auto mt-6 mb-8" />
       </header>
-      <form className="flex gap-2">
+      <form className="flex gap-2" onSubmit={handleSubmit}>
         <div className="flex-shrink">
           <label htmlFor="name" className="block text-xs text-slate-400">
             Item
           </label>
           <input
             type="text"
+            ref={inputRef}
             id="name"
+            name="nome"
             className="block w-full px-3 py-2 border rounded-lg border-slate-300 text-slate-700"
           />
         </div>
@@ -34,6 +94,7 @@ function App() {
           <input
             type="text"
             id="quantity"
+            name="quantidade"
             className="block w-full px-3 py-2 border rounded-lg border-slate-300 text-slate-700"
           />
         </div>
@@ -42,63 +103,17 @@ function App() {
         </button>
       </form>
       <section className="mt-10 space-y-3 ">
-        <article className="flex w-full gap-4">
-          <img src={todo} alt="#" />
-          <div className="flex-1">
-            <p>Leite</p>
-            <p className="text-sm text-slate-400">3 Caixas</p>
-          </div>
-          <img
-            src={trash}
-            alt="ícone de lixeira"
-            className="justify-self-end"
-          />
-        </article>
-        <hr />
-        <article className="flex w-full gap-4">
-          <img src={todo} alt="#" />
-          <div className="flex-1">
-            <p>Maçã</p>
-            <p className="text-sm text-slate-400">500g</p>
-          </div>
-          <img
-            src={trash}
-            alt="ícone de lixeira"
-            className="justify-self-end"
-          />
-        </article>
-        <hr />
+        {notCompletedItems.map((item) => (
+          <Item key={item.id} item={item} />
+        ))}
       </section>
       <section className="mt-16 space-y-3">
         <h2 className="mb-10 text-3xl text-center font-display">
           Itens já comprados
         </h2>
-        <article className="flex w-full gap-4">
-          <img src={done} alt="#" />
-          <div className="flex-1">
-            <p className="line-through text-slate-400">Leite</p>
-            <p className="text-sm line-through text-slate-400">3 Caixas</p>
-          </div>
-          <img
-            src={trash}
-            alt="ícone de lixeira"
-            className="justify-self-end"
-          />
-        </article>
-        <hr />
-        <article className="flex w-full gap-4">
-          <img src={done} alt="#" />
-          <div className="flex-1">
-            <p className="line-through text-slate-400">Maçã</p>
-            <p className="text-sm line-through text-slate-400">500g</p>
-          </div>
-          <img
-            src={trash}
-            alt="ícone de lixeira"
-            className="justify-self-end"
-          />
-        </article>
-        <hr />
+        {completedItems.map((item) => (
+          <Item key={item.id} item={item} />
+        ))}
       </section>
     </main>
   );
