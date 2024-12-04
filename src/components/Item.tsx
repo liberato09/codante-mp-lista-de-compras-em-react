@@ -5,14 +5,19 @@ import type { Item } from "../App.tsx";
 
 type ItemProps = {
   item: Item;
-  handleClick: (id: string) => void;
+  handleClickComplete: (id: string) => void;
+  handleClickDelete: (id: string) => void;
 };
 
-export function Item({ item, handleClick }: ItemProps) {
+export function Item({
+  item,
+  handleClickComplete,
+  handleClickDelete,
+}: ItemProps) {
   return (
     <>
       <article className="flex w-full gap-4">
-        <button onClick={() => handleClick(item.id)}>
+        <button onClick={() => handleClickComplete(item.id)}>
           <img src={item.completed ? done : todo} alt="#" />
         </button>
         <div className="flex-1">
@@ -29,7 +34,13 @@ export function Item({ item, handleClick }: ItemProps) {
             {item.quantity}
           </p>
         </div>
-        <img src={trash} alt="ícone de lixeira" className="justify-self-end" />
+        <button onClick={() => handleClickDelete(item.id)}>
+          <img
+            src={trash}
+            alt="ícone de lixeira"
+            className="justify-self-end"
+          />
+        </button>
       </article>
       <hr />
     </>

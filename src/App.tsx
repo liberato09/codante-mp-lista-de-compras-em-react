@@ -12,16 +12,7 @@ export type Item = {
 };
 
 function App() {
-  const [items, setItems] = useState<Item[]>([
-    {
-      id: nanoid(),
-      name: "Leite em Pó",
-      quantity: "3 caixas",
-      completed: false,
-    },
-    { id: nanoid(), name: "Banana", quantity: "1 dúzia", completed: false },
-    { id: nanoid(), name: "Laranja", quantity: "1 dúzia", completed: true },
-  ]);
+  const [items, setItems] = useState<Item[]>([]);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -78,6 +69,11 @@ function App() {
     setItems(newItems);
   }
 
+  function handleClickDelete(id: string) {
+    const newItems = items.filter((item) => item.id !== id);
+    setItems(newItems);
+  }
+
   return (
     <main className="max-w-2xl px-6 py-12 pb-20 mx-auto my-10 bg-white md:my-20 md:px-32 md:rounded-3xl">
       <header className="text-center">
@@ -120,15 +116,28 @@ function App() {
       </form>
       <section className="mt-10 space-y-3 ">
         {notCompletedItems.map((item) => (
-          <Item key={item.id} item={item} handleClick={handleClickComplete} />
+          <Item
+            key={item.id}
+            item={item}
+            handleClickComplete={handleClickComplete}
+            handleClickDelete={handleClickDelete}
+          />
         ))}
       </section>
       <section className="mt-16 space-y-3">
-        <h2 className="mb-10 text-3xl text-center font-display">
-          Itens já comprados
-        </h2>
+        {completedItems.length !== 0 && (
+          <h2 className="mb-10 text-3xl text-center font-display">
+            Itens já comprados
+          </h2>
+        )}
+
         {completedItems.map((item) => (
-          <Item key={item.id} item={item} handleClick={handleClickComplete} />
+          <Item
+            key={item.id}
+            item={item}
+            handleClickComplete={handleClickComplete}
+            handleClickDelete={handleClickDelete}
+          />
         ))}
       </section>
     </main>
